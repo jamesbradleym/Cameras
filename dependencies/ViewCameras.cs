@@ -86,15 +86,22 @@ namespace Elements
         {
             this.RepresentationInstances = new List<RepresentationInstance>();
 
-            foreach (var curveRep in CameraOutline(.25))
-            {
-                this.RepresentationInstances.Add(new RepresentationInstance(curveRep, BuiltInMaterials.Edges));
-            }
-
-            // foreach (var solidRep in CameraModel(.25))
+            // foreach (var curveRep in CameraOutline(.25))
             // {
-            //     this.RepresentationInstances.Add(new RepresentationInstance(solidRep, BuiltInMaterials.Edges));
+            //     this.RepresentationInstances.Add(new RepresentationInstance(curveRep, BuiltInMaterials.Edges));
             // }
+
+            var contentElement = new ContentElement("https://github.com/jamesbradleym/Cameras/blob/main/dependencies/ViewScopeCamera.glb", new BBox3(), 1, Vector3.XAxis, null)
+            {
+                IsElementDefinition = true
+            };
+
+            contentElement.Transform.Scale(0.001);
+
+            this.RepresentationInstances = new List<RepresentationInstance>
+            {
+                new(new ContentRepresentation(contentElement.GltfLocation, contentElement.BoundingBox), contentElement.Material)
+            };
         }
 
         public List<CurveRepresentation> CameraOutline(double scale = 1.0)
