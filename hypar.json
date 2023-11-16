@@ -1,0 +1,52 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "id": "ddb0d404-eff5-42aa-9189-15d0ec89d017",
+  "name": "Cameras",
+  "description": "The Cameras function.",
+  "language": "C#",
+  "model_output": "ViewCameras",
+  "overrides": {
+    "Cameras": {
+      "context": "[*discriminator=Elements.ViewCamera]",
+      "identity": {
+        "Add Id": {
+          "type": "string"
+        }
+      },
+      "behaviors": {
+        "add": {
+          "schema": {
+            "View Name": {
+              "$hyparOrder": 0,
+              "type": "string",
+              "default": ""
+            },
+            "Transform": {
+              "$hyparOrder": 1,
+              "$ref": "https://schemas.hypar.io/Transform.json"
+            }
+          }
+        },
+        "remove": true
+      },
+      "schema": {
+        "View Name": {
+          "$hyparOrder": 0,
+          "type": "string",
+          "default": ""
+        },
+        "Transform": {
+          "$hyparOrder": 1,
+          "$ref": "https://schemas.hypar.io/Transform.json"
+        }
+      }
+    }
+  },
+  "outputs": [],
+  "element_types": [
+    "https://schemas.hypar.io/ViewScope.json"
+  ],
+  "repository_url": "https://github.com/hypar-io/function",
+  "last_updated": "0001-01-01T00:00:00",
+  "cli_version": "1.10.0"
+}
