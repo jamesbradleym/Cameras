@@ -23,7 +23,7 @@ namespace Elements
             this.AddId = add.Id;
             this.Transform = add.Value.Transform;
             this.ViewName = add.Value.ViewName;
-            this.FocalPoint = add.Value.Transform.Moved(new Vector3(0, -1, 0)).Origin;
+            this.FocalPoint = add.Value.Transform.OfPoint(Vector3.YAxis.Negate() * 10);
 
             GenerateView();
             GenerateGeometry();
@@ -38,7 +38,7 @@ namespace Elements
         {
             this.Transform = edit.Value.Transform;
             this.ViewName = edit.Value.ViewName;
-            this.FocalPoint = edit.Value.Transform.Moved(new Vector3(0, -1, 0)).Origin;
+            this.FocalPoint = edit.Value.Transform.OfPoint(Vector3.YAxis.Negate() * 10);
 
             GenerateView();
             GenerateGeometry();
@@ -52,13 +52,15 @@ namespace Elements
             {
                 this.ViewName = AddId;
             }
-            var angle = this.Transform.Inverted().OfPoint(this.FocalPoint).Unitized();
+            var angle = (this.FocalPoint - this.Transform.Origin).Unitized();
             var scope = new ViewScope()
             {
                 BoundingBox = GetProperBounds(this.FocalPoint, this.Transform.Origin),
                 Camera = new Camera(angle, null, CameraProjection.Perspective),
                 ClipWithBoundingBox = false,
                 LockRotation = true,
+                LockPosition = true,
+                LockZoom = true,
                 Modal = true,
                 Name = this.ViewName
             };
@@ -84,24 +86,13 @@ namespace Elements
 
         public void GenerateGeometry()
         {
+            // Representation is relative to this.Transform
             this.RepresentationInstances = new List<RepresentationInstance>();
 
             foreach (var curveRep in CameraOutline(.25))
             {
                 this.RepresentationInstances.Add(new RepresentationInstance(curveRep, BuiltInMaterials.Edges));
             }
-
-            // var contentElement = new ContentElement("https://github.com/jamesbradleym/Cameras/blob/main/dependencies/ViewScopeCamera2.glb", new BBox3(), 1, Vector3.XAxis, null)
-            // {
-            //     IsElementDefinition = true
-            // };
-
-            // contentElement.Transform.Scale(0.001);
-
-            // this.RepresentationInstances = new List<RepresentationInstance>
-            // {
-            //     new(new ContentRepresentation(contentElement.GltfLocation, contentElement.BoundingBox), contentElement.Material)
-            // };
         }
 
         public List<CurveRepresentation> CameraOutline(double scale = 1.0)
